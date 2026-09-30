@@ -379,6 +379,11 @@ tfoot td{font-weight:600;background:var(--bg)}
 <script>
 /* ---------- workout data ---------- */
 const PULL = {
+  0:{label:"No bar yet",title:"Back width (no bar yet)",
+    note:"Buy a doorway pull-up bar when you can. It builds lat width better than anything else here. Once you have one, tap Weeks 1–3.",
+    items:[
+    {id:"inv",name:"Inverted row under a sturdy table",m:"Lats, mid back, biceps: closest move to a pull-up",rx:"3 × 6–12",rest:"90 s",sets:3,unit:"reps"},
+    {id:"bbrow",name:"Barbell bent-over row (overhand, slightly wide grip)",m:"Lats, mid back, rear delts",rx:"3 × 8–10",rest:"2 min",sets:3}]},
   1:{label:"Weeks 1–3",items:[
     {id:"hang",name:"Dead hang",m:"Grip, shoulders",rx:"3 × max",rest:"60 s",sets:3,unit:"sec"},
     {id:"scap",name:"Scapular pulls",m:"Lower traps, lats",rx:"3 × 8–10",rest:"60 s",sets:3,unit:"reps"},
@@ -391,7 +396,7 @@ const PULL = {
     {id:"ladder",name:"Ladder of single reps",m:"Lats, biceps, grip",rx:"5–8 singles",rest:"60–90 s",sets:8,unit:"total"}]}
 };
 const ABS = [
-  ["Hanging knee raise (or lying leg raise)","10–15","Lower abs, hip flexors, grip"],
+  ["Lying leg raise (hanging knee raise once you have a bar)","10–15","Lower abs, hip flexors"],
   ["Dead bug","10 / side","Deep core"],
   ["Plank","30–60 s","Whole core"],
   ["Side plank","20–40 s / side","Obliques"],
@@ -462,7 +467,9 @@ const KEY="vtaper-log-v1";
 let store={};
 try{store=JSON.parse(localStorage.getItem(KEY))||{}}catch(e){store={}}
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(store))}catch(e){}};
-store.week=store.week||1; store.phase=store.phase||1; store.w=store.w||{};
+store.week=store.week||1; store.w=store.w||{};
+if(!store.barV2){store.phase=0; store.barV2=true;}
+if(!(store.phase in PULL)) store.phase=0;
 store.view=store.view||"workout";
 store.budget=Object.assign({store:"cheap",whey:true,oats:false,bed:true,egg:false,market:false,prices:{}},store.budget||{});
 const wk=()=>{const k=String(store.week);return store.w[k]||(store.w[k]={})};
@@ -496,8 +503,10 @@ function renderWorkout(){
       if(D.pull){
         const P=PULL[store.phase];
         h+=`<div class="block"><div style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;align-items:center">
-          <p class="section-label">Pull-up progression</p>
+          <p class="section-label">${esc(P.title||"Pull-up progression")}</p>
           <div class="phase" role="group" aria-label="Pull-up stage">${Object.entries(PULL).map(([k,v])=>`<button type="button" data-phase="${k}" aria-pressed="${+k===store.phase}">${v.label}</button>`).join("")}</div></div>
+          ${P.note?`<p class="note">${esc(P.note)}</p>`:""}
+          ${store.phase===0?`<p class="note"><b>Table check:</b> use a heavy, solid table. Lie under it, grip the edge and pull your chest up to it. Bend your knees to make it easier and straighten your legs to make it harder. If the table shifts or tips at all, use barbell rows only.</p>`:""}
           <div class="ex-list">${P.items.map(e=>exRow(D.key+".pu",e)).join("")}</div></div>`;
       }
       h+=`<div class="ex-list">${D.ex.map(e=>exRow(D.key,e)).join("")}</div>`;
@@ -696,7 +705,7 @@ function renderBudget(){
 /* ---------- hi devike ---------- */
 const TODAY=["sun","mon","tue","wed","thu","fri","sat"][new Date().getDay()];
 const TIPS={
-  train:["Pull-ups and lateral raises first. They build the V.","Leave 1–2 reps in the tank on every set.","Beat last week's weight by a little. That's the whole game."],
+  train:["Back work and lateral raises first. They build the V.","Leave 1–2 reps in the tank on every set.","Beat last week's weight by a little. That's the whole game."],
   run:["Easy pace today. You should be able to chat.","Grab a thambili after the run.","Two bananas before you head out."],
   rest:["Rest day. Eat every snack. Muscle grows today.","Sleep 8 hours tonight. Free gains.","Step on the scale this morning and log it."]
 };
