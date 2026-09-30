@@ -1,0 +1,787 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#15212b">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<title>Gains · Devike's V-Taper Plan</title>
+<meta name="description" content="Devike's home V-taper training, snack plan and budget.">
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* Layout: logbook — three sections (Workout, Food, Budget); week strip picks the day; one day card open at a time; print lays all days on one sheet */
+:root{
+  --bg:#eef1f3; --surface:#ffffff; --ink:#15212b; --muted:#5b6a76; --line:#d5dce1;
+  --accent:#d9480f; --accent-soft:#fde6db; --steel:#2f5d7c; --steel-soft:#dde9f1;
+  --ok:#2b8a3e; --ok-soft:#d9f0de; --warn:#a15c00; --warn-soft:#fdf0d8;
+  --display:"Barlow Condensed","Arial Narrow",Impact,sans-serif;
+  --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f161c; --surface:#18222b; --ink:#e6edf2; --muted:#93a3af; --line:#2a3743;
+  --accent:#ff7a3d; --accent-soft:#3a2216; --steel:#7fb3d6; --steel-soft:#1c2e3c;
+  --ok:#5fd07a; --ok-soft:#173222; --warn:#f0b35a; --warn-soft:#352812; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f161c; --surface:#18222b; --ink:#e6edf2; --muted:#93a3af; --line:#2a3743;
+  --accent:#ff7a3d; --accent-soft:#3a2216; --steel:#7fb3d6; --steel-soft:#1c2e3c;
+  --ok:#5fd07a; --ok-soft:#173222; --warn:#f0b35a; --warn-soft:#352812; color-scheme:dark}
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.5}
+img,svg{max-width:100%}
+
+/* hi devike */
+.hello{display:grid;grid-template-columns:auto minmax(0,1fr);gap:16px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px 18px}
+.mascot{width:96px;height:112px;flex:none}
+.mascot .bob{animation:bob 1.6s ease-in-out infinite;transform-origin:50% 100%}
+.mascot .legL{animation:legL .5s ease-in-out infinite alternate;transform-origin:44px 84px}
+.mascot .legR{animation:legR .5s ease-in-out infinite alternate;transform-origin:56px 84px}
+.mascot.rest .legL,.mascot.rest .legR{animation:none}
+.mascot.party .bob{animation:hop .6s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-3px)}}
+@keyframes hop{50%{transform:translateY(-9px) rotate(-4deg)}}
+@keyframes legL{from{transform:rotate(-18deg)}to{transform:rotate(18deg)}}
+@keyframes legR{from{transform:rotate(18deg)}to{transform:rotate(-18deg)}}
+.hello-text{display:grid;gap:6px;min-width:0}
+.hello h2{font-family:var(--display);font-weight:800;font-size:clamp(28px,7vw,38px);line-height:.95;margin:0;text-transform:uppercase}
+.hello .greet{font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.bubble{position:relative;background:var(--accent-soft);color:var(--ink);border-radius:10px;padding:8px 12px;font-size:14px;max-width:48ch}
+.bubble::before{content:"";position:absolute;left:-7px;top:14px;border:7px solid transparent;border-left:0;border-right-color:var(--accent-soft)}
+.glance{display:grid;gap:4px;font-size:14px}
+.glance div{display:flex;gap:8px;align-items:baseline;min-width:0}
+.glance span{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);width:62px;flex:none}
+.glance b{font-weight:600;min-width:0}
+.hello .btn{justify-self:start}
+@media (max-width:520px){.hello{grid-template-columns:1fr;justify-items:start}.mascot{width:76px;height:88px}.bubble::before{display:none}}
+@media (prefers-reduced-motion:reduce){.mascot *{animation:none!important}}
+.wrap{max-width:860px;margin:0 auto;padding-inline:16px;padding-block:24px 48px;display:grid;gap:20px}
+
+header{display:grid;gap:6px}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+h1{font-family:var(--display);font-weight:800;font-size:clamp(34px,8vw,52px);line-height:.95;margin:0;letter-spacing:.01em;text-transform:uppercase;text-wrap:balance}
+.sub{color:var(--muted);margin:0;max-width:60ch}
+
+/* section tabs */
+.tabs{display:grid;grid-template-columns:repeat(3,1fr);background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:4px;gap:4px;position:sticky;top:env(safe-area-inset-top,0px);z-index:5}
+.tabs button{appearance:none;border:0;background:transparent;color:var(--muted);font-family:var(--display);font-weight:700;font-size:18px;letter-spacing:.06em;text-transform:uppercase;padding:8px 4px;border-radius:7px;cursor:pointer}
+.tabs button[aria-selected="true"]{background:var(--ink);color:var(--surface)}
+@media screen{.view.inactive{display:none}}
+.view{display:grid;gap:20px}
+
+.controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.controls label{font-size:13px;color:var(--muted)}
+select,input[type=text],input[type=number]{font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:6px 8px}
+select:focus-visible,input:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.btn{font:inherit;font-size:13px;background:transparent;color:var(--muted);border:1px solid var(--line);border-radius:6px;padding:6px 10px;cursor:pointer}
+.btn:hover{color:var(--ink);border-color:var(--muted)}
+.btn.danger{color:var(--accent);border-color:var(--accent)}
+.deload{font-size:13px;background:var(--accent-soft);color:var(--accent);padding:4px 10px;border-radius:999px;font-weight:600}
+.confirm{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:13.5px;color:var(--muted)}
+
+/* week strip */
+.strip{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}
+.chip{appearance:none;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:8px;padding:8px 4px 6px;cursor:pointer;display:grid;justify-items:center;gap:4px;font:inherit}
+.chip .d{font-family:var(--display);font-weight:700;font-size:18px;text-transform:uppercase;line-height:1}
+.chip .t{font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.chip .bar{width:70%;height:4px;border-radius:2px;background:var(--line);overflow:hidden}
+.chip .bar i{display:block;height:100%;width:0;background:var(--ok);transition:width .3s}
+.chip[aria-selected="true"]{border-color:var(--ink);box-shadow:inset 0 -3px 0 var(--accent)}
+.chip.today .d::after{content:"•";color:var(--accent);margin-left:2px}
+
+/* day card */
+.day{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px;display:grid;gap:18px}
+@media screen{.day.inactive{display:none}}
+.dayhead{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px 16px;align-items:end}
+.dayhead h2{font-family:var(--display);font-weight:800;font-size:32px;line-height:1;margin:0;text-transform:uppercase}
+.dayhead h2 small{display:block;font-family:var(--mono);font-size:12px;font-weight:500;color:var(--muted);letter-spacing:.08em;margin-bottom:4px}
+.progress{font-family:var(--mono);font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.progress.done{color:var(--ok)}
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+.tag{font-size:12px;background:var(--steel-soft);color:var(--steel);padding:3px 9px;border-radius:999px;font-weight:500}
+.note{font-size:13.5px;color:var(--muted);border-left:3px solid var(--line);padding-left:10px;margin:0}
+
+.section-label{font-family:var(--display);font-weight:700;font-size:15px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0}
+.ex-list{display:grid;border-top:1px solid var(--line)}
+.ex{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 16px;padding:12px 0;border-bottom:1px solid var(--line)}
+.ex-name{font-weight:600}
+.ex-meta{font-size:12.5px;color:var(--muted)}
+.ex-rx{font-family:var(--mono);font-size:14px;text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+.ex-rx small{display:block;font-size:11px;color:var(--muted)}
+.ex-log{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.sets{display:flex;flex-wrap:wrap;gap:6px}
+.set{position:relative}
+.set input{position:absolute;opacity:0;width:100%;height:100%;margin:0;cursor:pointer}
+.set span{display:grid;place-items:center;width:34px;height:34px;border:1.5px solid var(--line);border-radius:6px;font-family:var(--mono);font-size:13px;color:var(--muted);transition:background .15s,border-color .15s}
+.set input:checked + span{background:var(--ok);border-color:var(--ok);color:var(--surface)}
+.set input:focus-visible + span{outline:2px solid var(--accent);outline-offset:2px}
+.wt{display:flex;align-items:center;gap:6px;margin-left:auto}
+.wt input{width:92px;font-family:var(--mono);font-size:14px}
+.wt label{font-size:12px;color:var(--muted)}
+
+.phase{display:flex;flex-wrap:wrap;gap:6px}
+.phase button{font:inherit;font-size:12.5px;border:1px solid var(--line);background:transparent;color:var(--muted);border-radius:999px;padding:4px 10px;cursor:pointer}
+.phase button[aria-pressed="true"]{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+.block{display:grid;gap:10px;background:var(--bg);border-radius:10px;padding:14px}
+
+.cardio{display:grid;gap:10px}
+.opt{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 12px;align-items:start;padding:12px;border:1px solid var(--line);border-radius:8px;cursor:pointer}
+.opt input{margin-top:4px;accent-color:var(--accent)}
+.opt b{font-weight:600}
+.opt p{grid-column:2;margin:0;font-size:13.5px;color:var(--muted)}
+.opt:has(input:checked){border-color:var(--accent);background:var(--accent-soft)}
+
+/* food */
+.meal{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:4px 14px;align-items:start;padding:12px 0;border-bottom:1px solid var(--line)}
+.meal .when{grid-column:2;font-family:var(--mono);font-size:11.5px;color:var(--accent);letter-spacing:.05em;text-transform:uppercase}
+.meal .set{grid-row:1/span 3;align-self:center}
+.meal .what{grid-column:2;font-weight:600}
+.meal .how{grid-column:2;font-size:12.5px;color:var(--muted)}
+.meal .mac{grid-column:3;grid-row:1/span 3;align-self:center;text-align:right;font-family:var(--mono);font-size:13px;white-space:nowrap;font-variant-numeric:tabular-nums}
+.meal .mac small{display:block;color:var(--muted);font-size:11px}
+.totals{display:flex;flex-wrap:wrap;gap:8px 20px;font-family:var(--mono);font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.totals b{color:var(--ink);font-weight:500}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px;display:grid;gap:8px;align-content:start;min-width:0}
+.card h3{font-family:var(--display);font-weight:700;font-size:20px;text-transform:uppercase;margin:0;line-height:1.05}
+.card .mac2{font-family:var(--mono);font-size:12px;color:var(--steel)}
+.card ul,.card ol{margin:0;padding-left:18px;display:grid;gap:4px;font-size:13.5px}
+.h2{font-family:var(--display);font-weight:800;font-size:26px;text-transform:uppercase;margin:0}
+
+/* budget */
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px;display:grid;gap:16px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.seg button{font:inherit;font-size:13.5px;border:0;background:transparent;color:var(--muted);padding:7px 12px;cursor:pointer}
+.seg button+button{border-left:1px solid var(--line)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--surface)}
+.toggles{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px}
+.tg{display:flex;gap:10px;align-items:flex-start;font-size:13.5px;padding:10px;border:1px solid var(--line);border-radius:8px;cursor:pointer}
+.tg input{margin-top:3px;accent-color:var(--accent)}
+.tg small{display:block;color:var(--muted);font-size:12px}
+.big{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.big div{border:1px solid var(--line);border-radius:10px;padding:12px;display:grid;gap:2px;min-width:0}
+.big span{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.big b{font-family:var(--display);font-weight:800;font-size:clamp(22px,5vw,32px);line-height:1;font-variant-numeric:tabular-nums}
+.big div.main{background:var(--ink);border-color:var(--ink);color:var(--surface)}
+.big div.main span{color:var(--surface);opacity:.75}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px}
+table{border-collapse:collapse;width:100%;min-width:640px;font-size:13.5px}
+th,td{padding:9px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{font-size:11.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:600;background:var(--bg)}
+td.num,th.num{text-align:right;font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+td a{color:var(--steel);text-decoration:underline;text-underline-offset:2px}
+td .src{display:block;font-size:11.5px;color:var(--muted)}
+td input{width:86px;font-family:var(--mono);font-size:13px;text-align:right;padding:4px 6px}
+td input.edited{border-color:var(--accent)}
+tr.off td{opacity:.4}
+.flag{display:inline-block;font-size:10.5px;font-weight:600;padding:1px 6px;border-radius:999px;background:var(--warn-soft);color:var(--warn);margin-left:4px;vertical-align:1px}
+tfoot td{font-weight:600;background:var(--bg)}
+
+.rules{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px;display:grid;gap:10px}
+.rules h3{font-family:var(--display);font-weight:800;font-size:22px;text-transform:uppercase;margin:0}
+.rules ol{margin:0;padding-left:20px;display:grid;gap:6px}
+.foot{font-size:12.5px;color:var(--muted);text-align:center}
+
+@media (max-width:520px){
+  .day,.panel{padding:16px}
+  .chip .t{font-size:9.5px}
+  .wt{margin-left:0}
+  .big{grid-template-columns:1fr 1fr}
+  .big div.main{grid-column:1/-1}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+@media print{
+  :root{--bg:#fff;--surface:#fff;--ink:#000;--muted:#444;--line:#999}
+  body{font-size:10px}
+  .wrap{max-width:none;padding:0;gap:8px}
+  .tabs,.controls,.strip,.phase,.rules,.foot,.sub,.confirm,.view.inactive{display:none}
+  h1{font-size:24px}
+  .days{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .day{padding:8px;gap:6px;break-inside:avoid;border-radius:4px}
+  .dayhead h2{font-size:16px}
+  .tags,.note,.progress,.ex-meta,.meal .how{display:none}
+  .ex,.meal{padding:4px 0}
+  .set span{width:16px;height:16px;font-size:8px}
+  .set input:checked + span{background:none;color:#000}
+  .wt input{width:50px;border:none;border-bottom:1px solid #000;border-radius:0;padding:0}
+  .block{padding:6px;background:none;border:1px dashed #999}
+  .opt{padding:4px}
+  .opt p{display:none}
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Home · barbell + dumbbells · 58 kg start</div>
+    <h1>V-Taper Home Program</h1>
+    <p class="sub">Training, snacks and shopping costs in one place. Tap boxes as you go. Everything saves on this phone.</p>
+  </header>
+
+  <section class="hello" aria-label="Today">
+    <svg class="mascot" id="mascot" viewBox="0 0 100 116" role="img" aria-label="Kolla the running king coconut">
+      <g class="legL"><path d="M44 84 L40 104" stroke="var(--ink)" stroke-width="4" stroke-linecap="round" fill="none"/><path d="M34 104 h12 a3 3 0 0 1 0 6 h-12 a3 3 0 0 1 0-6z" fill="var(--steel)"/></g>
+      <g class="legR"><path d="M56 84 L60 104" stroke="var(--ink)" stroke-width="4" stroke-linecap="round" fill="none"/><path d="M54 104 h12 a3 3 0 0 1 0 6 h-12 a3 3 0 0 1 0-6z" fill="var(--steel)"/></g>
+      <g class="bob">
+        <path d="M50 8 C74 8 84 34 84 56 C84 76 69 90 50 90 C31 90 16 76 16 56 C16 34 26 8 50 8Z" fill="#f08a24"/>
+        <path d="M50 8 C60 8 68 16 72 26 C62 20 38 20 28 26 C32 16 40 8 50 8Z" fill="#6aa84f"/>
+        <path d="M46 2 h8 v8 h-8z" fill="#4e7d3a"/>
+        <path d="M24 60 C26 74 36 84 48 86" stroke="#ffffff" stroke-opacity=".35" stroke-width="4" stroke-linecap="round" fill="none"/>
+        <ellipse cx="40" cy="50" rx="4" ry="5" fill="#15212b"/><ellipse cx="60" cy="50" rx="4" ry="5" fill="#15212b"/>
+        <circle cx="41.5" cy="48" r="1.4" fill="#ffffff"/><circle cx="61.5" cy="48" r="1.4" fill="#ffffff"/>
+        <ellipse cx="33" cy="60" rx="4" ry="2.5" fill="#e0522b" opacity=".5"/><ellipse cx="67" cy="60" rx="4" ry="2.5" fill="#e0522b" opacity=".5"/>
+        <path id="mouth" d="M43 61 Q50 68 57 61" stroke="#15212b" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+        <path d="M28 40 h44" stroke="#d9480f" stroke-width="5" stroke-linecap="round"/>
+        <path d="M18 62 L8 70" stroke="#15212b" stroke-width="3.5" stroke-linecap="round"/><path d="M82 62 L92 54" stroke="#15212b" stroke-width="3.5" stroke-linecap="round"/>
+      </g>
+    </svg>
+    <div class="hello-text">
+      <div class="greet" id="greet">Good day</div>
+      <h2>Hi Devike</h2>
+      <div class="bubble" id="bubble">Let's get after it.</div>
+      <div class="glance" id="glance"></div>
+      <button class="btn" type="button" id="openToday">Open today's workout</button>
+    </div>
+  </section>
+
+  <nav class="tabs" role="tablist" aria-label="Sections">
+    <button role="tab" data-view="workout" aria-selected="true">Workout</button>
+    <button role="tab" data-view="food" aria-selected="false">Food</button>
+    <button role="tab" data-view="budget" aria-selected="false">Budget</button>
+  </nav>
+
+  <div class="controls" id="weekControls">
+    <label for="week">Week</label>
+    <select id="week"></select>
+    <span class="deload" id="deloadTag" hidden>Deload week: do about half the sets</span>
+    <button class="btn" id="copyPrev" type="button">Copy last week's weights</button>
+    <button class="btn" id="resetWeek" type="button">Clear this week</button>
+  </div>
+  <div class="confirm" id="resetConfirm" hidden>
+    Clear every tick and weight for this week?
+    <button class="btn danger" id="resetYes" type="button">Clear week</button>
+    <button class="btn" id="resetNo" type="button">Cancel</button>
+  </div>
+  <nav class="strip" id="strip" role="tablist" aria-label="Days of the week"></nav>
+
+  <!-- WORKOUT -->
+  <section class="view" id="view-workout">
+    <main class="days" id="days"></main>
+    <section class="rules">
+      <h3>Training rules</h3>
+      <ol>
+        <li><b>Weight:</b> finish each set with 1–2 reps left in the tank. Never go to complete failure.</li>
+        <li><b>Progress:</b> hit the top of the rep range on every set, then add a little weight or a rep next time.</li>
+        <li><b>Warm-up:</b> 5 minutes of arm circles, light rows and bodyweight squats, then 1–2 light sets of your first lift.</li>
+        <li><b>Running:</b> after Friday's runner legs, keep Saturday to the long easy run or the cycle. Do intervals only when your legs feel fresh.</li>
+        <li><b>Deload:</b> every 7th week, do about half the sets.</li>
+        <li><b>Recovery:</b> sleep 7–9 hours. If your lifts drop for 2 weeks, cut to one run a week.</li>
+        <li><b>Don't skip</b> lateral raises or the pull-up work. They build the V.</li>
+      </ol>
+    </section>
+  </section>
+
+  <!-- FOOD -->
+  <section class="view inactive" id="view-food">
+    <div class="days" id="fdays"></div>
+    <h2 class="h2">How to make it</h2>
+    <div class="cards">
+      <div class="card"><h3>Chickpea tempering<br><small style="font-size:14px;color:var(--muted)">Kadala thel dala · Mon / Thu</small></h3><div class="mac2">≈ 300 kcal · 15 g protein</div>
+        <ol><li>Soak 60 g dry chickpeas overnight, then boil until soft (or use your batch from the fridge).</li><li>Heat 1 tsp oil. Add a pinch of mustard seeds, ½ small onion, 1 dried chilli and curry leaves.</li><li>Toss in the chickpeas, 2 tbsp grated coconut and salt.</li></ol></div>
+      <div class="card"><h3>Boiled green gram<br><small style="font-size:14px;color:var(--muted)">Mung ata · Tue / Fri</small></h3><div class="mac2">≈ 260 kcal · 15 g protein</div>
+        <ol><li>Boil 70 g dry green gram with salt until soft, then drain.</li><li>Mix in 2 tbsp grated coconut.</li><li>Optional: a squeeze of lime and a chopped green chilli.</li></ol></div>
+      <div class="card"><h3>Devilled soya meat<br><small style="font-size:14px;color:var(--muted)">Wed / Sat</small></h3><div class="mac2">≈ 230 kcal · 25 g protein</div>
+        <ol><li>Soak 50 g dry soya meat (about half a 90 g pack) in hot water for 10 minutes, then squeeze it dry.</li><li>Fry in 1 tsp oil with ½ onion, ½ capsicum or tomato and chilli flakes.</li><li>Finish with a little tomato sauce and soy sauce.</li></ol></div>
+      <div class="card"><h3>Mackerel sandwich<br><small style="font-size:14px;color:var(--muted)">Sunday</small></h3><div class="mac2">≈ 300 kcal · 18 g protein</div>
+        <ol><li>Mash ½ can of mackerel (about 75 g fish) with chopped onion, green chilli and lime.</li><li>Fill 2 slices of bread. Keep the other half of the can in the fridge for 1–2 days.</li></ol></div>
+      <div class="card"><h3>Whey shake</h3><div class="mac2">≈ 380 kcal · 34 g protein (530 kcal · 39 g with oats)</div>
+        <ul><li>1 scoop whey (about 30 g)</li><li>250 ml full-cream milk</li><li>1 banana</li><li>5 g creatine (1 level teaspoon)</li><li>Optional: ½ cup (40 g) oats if your weight stalls</li></ul></div>
+      <div class="card"><h3>No-whey gainer</h3><div class="mac2">≈ 450 kcal · 15 g protein</div>
+        <ul><li>4 tbsp full-cream milk powder</li><li>½ cup (40 g) oats</li><li>1 banana, 1 tsp sugar, water</li><li>5 g creatine</li></ul>
+        <p class="note">Less protein, so have soya meat every morning instead of rotating.</p></div>
+    </div>
+    <section class="rules">
+      <h3>Make it work better</h3>
+      <ol>
+        <li><b>Batch cook</b> chickpeas and green gram on Sunday and Wednesday. Each morning snack then takes 2 minutes.</li>
+        <li><b>Run days:</b> drink an extra 500 ml–1 L of water with a pinch of salt. A king coconut (thambili) after a run works very well.</li>
+        <li><b>Fruit daily:</b> papaya, mango, guava or pineapple. Cheap vitamins that help recovery.</li>
+        <li><b>Greens at home:</b> gotukola or mukunuwenna mallum for iron, which matters more when you run.</li>
+        <li><b>Morning sun:</b> 15 minutes outside for vitamin D.</li>
+        <li><b>Weight stalled for 2 weeks?</b> Add oats to the shake first, then 20 g more peanuts. Change one thing at a time.</li>
+        <li><b>Sleep 8 hours.</b> That's when muscle is actually built.</li>
+      </ol>
+    </section>
+  </section>
+
+  <!-- BUDGET -->
+  <section class="view inactive" id="view-budget">
+    <div class="panel">
+      <div style="display:grid;gap:4px">
+        <h2 class="h2">Snack budget</h2>
+        <p class="note">Covers only the snacks and supplements in this plan, not your meals at home. Supermarket prices are from Keells and SPAR online, checked 30 Sep 2026. Tap any price to change it to what you actually pay.</p>
+      </div>
+      <div class="controls">
+        <span style="font-size:13px;color:var(--muted)">Buy from</span>
+        <div class="seg" id="storeSeg" role="group" aria-label="Store">
+          <button type="button" data-store="keells">Keells</button>
+          <button type="button" data-store="spar">SPAR</button>
+          <button type="button" data-store="cheap">Cheapest of both</button>
+        </div>
+      </div>
+      <div class="toggles">
+        <label class="tg"><input type="checkbox" id="optWhey"><span>Use whey<small>Off switches to the no-whey gainer and daily soya meat</small></span></label>
+        <label class="tg"><input type="checkbox" id="optOats"><span>Oats in the whey shake<small>+150 kcal a day, for when weight stalls</small></span></label>
+        <label class="tg"><input type="checkbox" id="optBed"><span>Milk before bed<small>250 ml a night</small></span></label>
+        <label class="tg"><input type="checkbox" id="optEgg"><span>Buy my own egg<small>Leave off if home provides it</small></span></label>
+        <label class="tg"><input type="checkbox" id="optMarket"><span>Peanuts from the market<small>Loose peanuts, roasted at home. Price is an estimate</small></span></label>
+      </div>
+      <div class="big">
+        <div class="main"><span>Per month</span><b id="bMonth">–</b></div>
+        <div><span>Per week</span><b id="bWeek">–</b></div>
+        <div><span>Per day</span><b id="bDay">–</b></div>
+      </div>
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th>Item</th><th>Product</th><th class="num">Pack price (Rs)</th><th class="num">Use / week</th><th class="num">Week</th><th class="num">Month</th></tr></thead>
+          <tbody id="bBody"></tbody>
+          <tfoot><tr><td colspan="4">Total</td><td class="num" id="fWeek"></td><td class="num" id="fMonth"></td></tr></tfoot>
+        </table>
+      </div>
+      <div class="controls">
+        <button class="btn" id="resetPrices" type="button">Reset prices to store prices</button>
+        <span class="ex-meta"><span class="flag">EST</span> means a rough estimate: neither store sells it online, so check your local shop.</span>
+      </div>
+    </div>
+    <section class="rules">
+      <h3>Spend less</h3>
+      <ol>
+        <li><b>Whey is the biggest cost.</b> Switch it off above to see the difference. Soya meat is the cheapest protein per rupee in the list.</li>
+        <li><b>Buy chickpeas and green gram loose (bulk)</b>, not in branded packs. At Keells the bulk green gram is less than a third of the branded 500 g pack price per kg.</li>
+        <li><b>Supermarket peanuts cost about 3× market peanuts.</b> Buy loose peanuts at the pola and dry-roast a week's worth in a pan.</li>
+        <li><b>Bananas and papaya</b> are often cheaper at a roadside stall than at either store.</li>
+        <li><b>Buy whey and creatine</b> from a trusted supplement shop and check the seal. Fakes are common at unusually low prices.</li>
+      </ol>
+    </section>
+  </section>
+
+  <p class="foot">Ticks, weights and edited prices are saved in this browser only.</p>
+</div>
+
+<script>
+/* ---------- workout data ---------- */
+const PULL = {
+  1:{label:"Weeks 1–3",items:[
+    {id:"hang",name:"Dead hang",m:"Grip, shoulders",rx:"3 × max",rest:"60 s",sets:3,unit:"sec"},
+    {id:"scap",name:"Scapular pulls",m:"Lower traps, lats",rx:"3 × 8–10",rest:"60 s",sets:3,unit:"reps"},
+    {id:"neg",name:"Negatives (3–5 s down)",m:"Lats, biceps",rx:"4 × 3–5",rest:"2 min",sets:4,unit:"reps"}]},
+  2:{label:"Weeks 3–6",items:[
+    {id:"neg2",name:"Negatives (5–8 s down)",m:"Lats, biceps",rx:"4 × 4–6",rest:"2 min",sets:4,unit:"reps"},
+    {id:"fah",name:"Flexed-arm hang (chin over bar)",m:"Lats, biceps, grip",rx:"3 × max",rest:"90 s",sets:3,unit:"sec"}]},
+  3:{label:"First rep",items:[
+    {id:"strict",name:"Strict pull-up attempt (fresh)",m:"Lats, biceps",rx:"1–2 tries",rest:"2 min",sets:2,unit:"reps"},
+    {id:"ladder",name:"Ladder of single reps",m:"Lats, biceps, grip",rx:"5–8 singles",rest:"60–90 s",sets:8,unit:"total"}]}
+};
+const ABS = [
+  ["Hanging knee raise (or lying leg raise)","10–15","Lower abs, hip flexors, grip"],
+  ["Dead bug","10 / side","Deep core"],
+  ["Plank","30–60 s","Whole core"],
+  ["Side plank","20–40 s / side","Obliques"],
+  ["Reverse crunch","12–15","Lower abs"]
+];
+const DAYS = [
+ {key:"mon",d:"Mon",type:"Upper A",kind:"train",title:"Upper A: Strength",tags:["Lats","Shoulders","Chest","Triceps","Abs"],pull:true,abs:true,ex:[
+  {id:"ohp",name:"Barbell overhead press",m:"Front & side delts, triceps",rx:"4 × 6–8",rest:"2 min",sets:4},
+  {id:"dbrow",name:"Dumbbell single-arm row",m:"Lats, mid back, rear delts",rx:"3 × 8–10 / arm",rest:"90 s",sets:3},
+  {id:"floor",name:"Barbell or dumbbell floor press",m:"Chest, triceps",rx:"3 × 8–10",rest:"90 s",sets:3},
+  {id:"lat",name:"Dumbbell lateral raise",m:"Side delts: shoulder width",rx:"4 × 12–15",rest:"60 s",sets:4}]},
+ {key:"tue",d:"Tue",type:"Legs: strength",kind:"train",title:"Lower A: Strength",tags:["Quads","Glutes","Hamstrings","Back","Calves"],ex:[
+  {id:"squat",name:"Barbell back squat",m:"Quads, glutes",rx:"4 × 6–8",rest:"2 min",sets:4},
+  {id:"dl",name:"Barbell deadlift",m:"Hamstrings, glutes, back, grip",rx:"3 × 5",rest:"2–3 min",sets:3},
+  {id:"lunge",name:"Dumbbell reverse lunge",m:"Quads, glutes",rx:"3 × 10 / leg",rest:"90 s",sets:3},
+  {id:"calf",name:"Dumbbell calf raise",m:"Calves",rx:"3 × 15",rest:"60 s",sets:3}]},
+ {key:"wed",d:"Wed",type:"Easy run",kind:"run",title:"Easy Run",tags:["Heart & lungs","Leg endurance"],cardio:[
+  {id:"easy",name:"Easy run: 25–35 min",p:"Slow enough to hold a conversation. Add 5 minutes every 2–3 weeks if your lifts are still going up."}]},
+ {key:"thu",d:"Thu",type:"Upper B",kind:"train",title:"Upper B: Width",tags:["Lats","Side & rear delts","Mid back","Arms","Abs"],pull:true,abs:true,ex:[
+  {id:"pullover",name:"Dumbbell pullover",m:"Lats (back width), chest",rx:"3 × 10–12",rest:"90 s",sets:3},
+  {id:"dbpress",name:"Dumbbell seated shoulder press",m:"Front & side delts, triceps",rx:"3 × 10–12",rest:"90 s",sets:3},
+  {id:"csrow",name:"Chest-supported dumbbell row",m:"Mid back, lats, rear delts",rx:"3 × 10–12",rest:"90 s",sets:3},
+  {id:"lat2",name:"Dumbbell lateral raise",m:"Side delts: shoulder width",rx:"4 × 15–20",rest:"60 s",sets:4},
+  {id:"rdf",name:"Dumbbell rear-delt fly",m:"Rear delts, upper back",rx:"3 × 15",rest:"60 s",sets:3},
+  {id:"curl",name:"Dumbbell curl",m:"Biceps",rx:"2 × 12",rest:"60 s",sets:2},
+  {id:"tri",name:"Overhead triceps extension",m:"Triceps",rx:"2 × 12",rest:"60 s",sets:2}]},
+ {key:"fri",d:"Fri",type:"Legs: runner",kind:"train",title:"Lower B: Runner Legs",tags:["Single-leg strength","Calves & shins","Glutes","Ankles"],ex:[
+  {id:"pogo",name:"Pogo hops (bounce on the balls of your feet)",m:"Ankles, calves: springier stride",rx:"3 × 20",rest:"60 s",sets:3,unit:"reps"},
+  {id:"bss",name:"Dumbbell Bulgarian split squat",m:"Quads, glutes: single-leg power",rx:"3 × 8 / leg",rest:"90 s",sets:3},
+  {id:"slrdl",name:"Single-leg dumbbell Romanian deadlift",m:"Hamstrings, glutes: balance",rx:"3 × 8 / leg",rest:"90 s",sets:3},
+  {id:"stepup",name:"Dumbbell step-up (drive the knee high)",m:"Glutes, quads: running knee drive",rx:"3 × 10 / leg",rest:"60 s",sets:3},
+  {id:"glbr",name:"Single-leg glute bridge",m:"Glutes: stable hips",rx:"3 × 12 / leg",rest:"60 s",sets:3,unit:"reps"},
+  {id:"seatcalf",name:"Seated calf raise (dumbbell on knees)",m:"Soleus: shin splints & Achilles",rx:"3 × 15",rest:"45 s",sets:3},
+  {id:"slcalf",name:"Single-leg calf raise",m:"Calves",rx:"2 × 12 / leg",rest:"45 s",sets:2},
+  {id:"tib",name:"Tibialis raise (back to wall, lift toes)",m:"Shins: prevents shin splints",rx:"2 × 20",rest:"30 s",sets:2,unit:"reps"}]},
+ {key:"sat",d:"Sat",type:"Run / cycle",kind:"run",title:"Run or Cycle",tags:["Heart & lungs","Legs","Abs"],abs:true,choose:true,cardio:[
+  {id:"long",name:"Longer easy run: 40–50 min",p:"Conversational pace the whole way. Best choice after Friday's runner legs."},
+  {id:"cycle",name:"Cycle: 45–60 min",p:"Steady pace. Easiest on your legs."},
+  {id:"int",name:"Intervals (only if legs feel fresh)",p:"10 min easy, then 6–8 rounds of 1 min fast + 2 min easy jog, then 5 min easy."}]},
+ {key:"sun",d:"Sun",type:"Rest",kind:"rest",title:"Rest",tags:["Recovery"],rest:true}
+];
+
+/* ---------- food data ---------- */
+const SAVORY = {
+  chick:{what:"Chickpea tempering (kadala thel dala)",how:"1 cup boiled: 60 g dry, soaked overnight, with onion, chilli, curry leaves and 2 tbsp coconut",k:300,p:15},
+  gram:{what:"Boiled green gram (mung ata) with coconut",how:"1 cup boiled: 70 g dry, with 2 tbsp grated coconut and salt",k:260,p:15},
+  soya:{what:"Devilled soya meat",how:"50 g dry (about half a 90 g pack), fried with onion, capsicum and chilli",k:230,p:25},
+  fish:{what:"Mackerel sandwich",how:"½ can (about 75 g fish) on 2 slices of bread, with onion, chilli and lime",k:300,p:18}
+};
+const ROT = {mon:"chick",thu:"chick",tue:"gram",fri:"gram",wed:"soya",sat:"soya",sun:"fish"};
+function foodFor(D){
+  const run=D.kind==="run", rest=D.kind==="rest";
+  const s=SAVORY[ROT[D.key]];
+  const items=[
+    {id:"am",when:"10–11 am · savoury",what:s.what,how:s.how,k:s.k,p:s.p},
+    {id:"pre",when:rest?"Afternoon":"4–5 pm · 60–90 min before training",what:run?"2 bananas + 30 g roasted peanuts":"1 banana + 30 g roasted peanuts",how:"30 g is a small handful, about 25 peanuts",k:run?385:280,p:run?10:9},
+    {id:"shake",when:rest?"Any time today":"Right after training",what:"Whey shake + 5 g creatine",how:"1 scoop whey, 250 ml full-cream milk, 1 banana. Add ½ cup oats if your weight stalls",k:380,p:34}
+  ];
+  if(run) items.push({id:"fruit",when:"After the run",what:"1 fruit + extra water",how:"Papaya, mango or guava. Drink 500 ml–1 L extra water with a pinch of salt, or a king coconut",k:80,p:1});
+  items.push({id:"bed",when:"Before bed · optional",what:"250 ml warm full-cream milk",how:"Skip it if you're already full",k:150,p:8});
+  items.push({id:"egg",when:"Any time",what:"1 egg",how:"At home or with a snack",k:75,p:6});
+  items.push({id:"water",when:"All day",what:run?"3.5–4 L water":"3+ L water",how:"More in hot weather",k:0,p:0});
+  return items;
+}
+
+/* ---------- storage ---------- */
+const KEY="vtaper-log-v1";
+let store={};
+try{store=JSON.parse(localStorage.getItem(KEY))||{}}catch(e){store={}}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(store))}catch(e){}};
+store.week=store.week||1; store.phase=store.phase||1; store.w=store.w||{};
+store.view=store.view||"workout";
+store.budget=Object.assign({store:"cheap",whey:true,oats:false,bed:true,egg:false,market:false,prices:{}},store.budget||{});
+const wk=()=>{const k=String(store.week);return store.w[k]||(store.w[k]={})};
+const get=(k)=>wk()[k];
+const set=(k,v)=>{const w=wk(); if(v===""||v===false||v==null) delete w[k]; else w[k]=v; save()};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+/* ---------- render: workout ---------- */
+function exRow(dayKey,e){
+  const base=`${dayKey}.${e.id}`;
+  let boxes="";
+  for(let i=1;i<=e.sets;i++){
+    const id=`${base}.s${i}`;
+    boxes+=`<label class="set" title="Set ${i}"><input type="checkbox" id="${id}" data-k="${id}" aria-label="${esc(e.name)} set ${i}"><span>${i}</span></label>`;
+  }
+  const u=e.unit||"kg";
+  return `<div class="ex">
+    <div><div class="ex-name">${esc(e.name)}</div><div class="ex-meta">${esc(e.m)}</div></div>
+    <div class="ex-rx">${esc(e.rx)}<small>rest ${esc(e.rest)}</small></div>
+    <div class="ex-log"><div class="sets">${boxes}</div>
+      <div class="wt"><input type="text" inputmode="decimal" id="${base}.w" data-k="${base}.w" placeholder="${u}" aria-label="${esc(e.name)} ${u}"><label for="${base}.w">${u==='kg'?'kg':''}</label></div>
+    </div></div>`;
+}
+function renderWorkout(){
+  document.getElementById("days").innerHTML=DAYS.map(D=>{
+    let h=`<article class="day" data-day="${D.key}" data-prog-scope="w">
+      <div class="dayhead"><h2><small>${D.d.toUpperCase()} · WEEK <span class="wkn"></span></small>${esc(D.title)}</h2><span class="progress"></span></div>
+      <div class="tags">${D.tags.map(t=>`<span class="tag">${esc(t)}</span>`).join("")}</div>`;
+    if(D.ex){
+      h+=`<p class="note">Warm up 5 minutes first, then do 1–2 light sets of the first exercise.</p>`;
+      if(D.pull){
+        const P=PULL[store.phase];
+        h+=`<div class="block"><div style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;align-items:center">
+          <p class="section-label">Pull-up progression</p>
+          <div class="phase" role="group" aria-label="Pull-up stage">${Object.entries(PULL).map(([k,v])=>`<button type="button" data-phase="${k}" aria-pressed="${+k===store.phase}">${v.label}</button>`).join("")}</div></div>
+          <div class="ex-list">${P.items.map(e=>exRow(D.key+".pu",e)).join("")}</div></div>`;
+      }
+      h+=`<div class="ex-list">${D.ex.map(e=>exRow(D.key,e)).join("")}</div>`;
+    }
+    if(D.cardio){
+      h+=`<div class="cardio">${D.cardio.map(c=>{
+        const id=`${D.key}.c.${c.id}`;
+        return D.choose
+          ? `<label class="opt"><input type="radio" name="${D.key}-choice" id="${id}" data-radio="${D.key}.choice" value="${c.id}"><b>${esc(c.name)}</b><p>${esc(c.p)}</p></label>`
+          : `<label class="opt"><input type="checkbox" id="${id}" data-k="${id}"><b>${esc(c.name)}</b><p>${esc(c.p)}</p></label>`;
+      }).join("")}
+      <div class="ex-log" style="gap:12px">${D.choose?`<label class="set" title="Done"><input type="checkbox" id="${D.key}.c.done" data-k="${D.key}.c.done" aria-label="Session done"><span>✓</span></label><span class="ex-meta">Tap when done</span>`:""}
+        <div class="wt"><input type="text" inputmode="decimal" id="${D.key}.c.min" data-k="${D.key}.c.min" placeholder="min" aria-label="Minutes"><label for="${D.key}.c.min">min</label></div>
+        <div class="wt" style="margin-left:0"><input type="text" inputmode="decimal" id="${D.key}.c.km" data-k="${D.key}.c.km" placeholder="km" aria-label="Distance"><label for="${D.key}.c.km">km</label></div></div></div>`;
+    }
+    if(D.abs){
+      h+=`<div class="block"><p class="section-label">Abs circuit · 3 rounds</p>
+        <div class="ex-list">${ABS.map(a=>`<div class="ex"><div><div class="ex-name">${esc(a[0])}</div><div class="ex-meta">${esc(a[2])}</div></div><div class="ex-rx">${esc(a[1])}</div></div>`).join("")}</div>
+        <div class="ex-log"><span class="ex-meta">Rounds done</span><div class="sets">${[1,2,3].map(i=>`<label class="set"><input type="checkbox" id="${D.key}.abs.r${i}" data-k="${D.key}.abs.r${i}" aria-label="Abs round ${i}"><span>${i}</span></label>`).join("")}</div></div></div>`;
+    }
+    if(D.rest){
+      h+=`<p class="note">No training. Walk if you like, stretch, and sleep 7–9 hours. Still eat all your snacks: muscle grows on rest days.</p>
+      <div class="ex-log"><span class="ex-meta">Morning weight</span><div class="wt" style="margin-left:0"><input type="text" inputmode="decimal" id="sun.bw" data-k="sun.bw" placeholder="kg" aria-label="Bodyweight"><label for="sun.bw">kg</label></div></div>`;
+    }
+    return h+`</article>`;
+  }).join("");
+}
+
+/* ---------- render: food ---------- */
+function renderFood(){
+  document.getElementById("fdays").innerHTML=DAYS.map(D=>{
+    const items=foodFor(D);
+    const k=items.reduce((a,i)=>a+i.k,0), p=items.reduce((a,i)=>a+i.p,0);
+    const label={train:"Training day",run:"Run / cycle day: +300 kcal",rest:"Rest day"}[D.kind];
+    return `<article class="day" data-day="${D.key}" data-prog-scope="f">
+      <div class="dayhead"><h2><small>${D.d.toUpperCase()} · WEEK <span class="wkn"></span></small>Snacks: ${esc(label)}</h2><span class="progress"></span></div>
+      <div class="totals"><span>Snacks add <b>≈ ${k} kcal</b></span><span><b>≈ ${p} g</b> protein</span><span>Home meals cover the rest</span></div>
+      <div class="ex-list">${items.map(i=>{const id=`${D.key}.food.${i.id}`;return `<div class="meal">
+        <label class="set"><input type="checkbox" id="${id}" data-k="${id}" aria-label="${esc(i.what)} eaten"><span>✓</span></label>
+        <div class="when">${esc(i.when)}</div><div class="what">${esc(i.what)}</div><div class="how">${esc(i.how)}</div>
+        <div class="mac">${i.k?i.k+" kcal":""}<small>${i.p?i.p+" g protein":""}</small></div></div>`}).join("")}</div>
+      <p class="note">No whey? Swap the shake for the no-whey gainer below and have soya meat every morning.</p>
+    </article>`;
+  }).join("");
+}
+
+/* ---------- fill + progress ---------- */
+function fill(){
+  document.querySelectorAll(".wkn").forEach(n=>n.textContent=store.week);
+  document.querySelectorAll("[data-k]").forEach(el=>{
+    const v=get(el.dataset.k);
+    if(el.type==="checkbox") el.checked=!!v; else el.value=v||"";
+  });
+  document.querySelectorAll("[data-radio]").forEach(el=>{el.checked=get(el.dataset.radio)===el.value});
+  document.getElementById("deloadTag").hidden=store.week%7!==0;
+  progress();
+}
+function progress(){
+  const scope=store.view==="food"?"f":"w";
+  document.querySelectorAll(".day").forEach(card=>{
+    const D=DAYS.find(x=>x.key===card.dataset.day);
+    const boxes=[...card.querySelectorAll('.set input[type=checkbox], .opt input[type=checkbox]')];
+    const total=boxes.length, done=boxes.filter(b=>b.checked).length;
+    const p=card.querySelector(".progress");
+    if(D.rest&&card.dataset.progScope==="w"){p.textContent="Recovery day";p.classList.remove("done")}
+    else{p.textContent=`${done}/${total} done`;p.classList.toggle("done",total>0&&done===total)}
+    if(card.dataset.progScope===scope){
+      const bar=document.querySelector(`.chip[data-day="${D.key}"] .bar i`);
+      if(bar) bar.style.width=(D.rest&&scope==="w"?0:(total?done/total:0))*100+"%";
+    }
+  });
+  if(typeof renderHello==="function"&&document.getElementById("glance")) renderHello();
+}
+
+/* ---------- strip + views ---------- */
+function strip(){
+  const today=["sun","mon","tue","wed","thu","fri","sat"][new Date().getDay()];
+  const s=document.getElementById("strip");
+  s.innerHTML=DAYS.map(D=>`<button class="chip${D.key===today?" today":""}" role="tab" data-day="${D.key}" aria-selected="false"><span class="d">${D.d}</span><span class="t">${esc(D.type)}</span><span class="bar"><i></i></span></button>`).join("");
+  s.addEventListener("click",e=>{const b=e.target.closest(".chip");if(b)show(b.dataset.day)});
+  show(store.day||today);
+}
+function show(key){
+  store.day=key; save();
+  document.querySelectorAll(".chip").forEach(c=>c.setAttribute("aria-selected",c.dataset.day===key));
+  document.querySelectorAll(".day").forEach(d=>d.classList.toggle("inactive",d.dataset.day!==key));
+}
+function setView(v){
+  store.view=v; save();
+  document.querySelectorAll(".tabs button").forEach(b=>b.setAttribute("aria-selected",b.dataset.view===v));
+  ["workout","food","budget"].forEach(n=>document.getElementById("view-"+n).classList.toggle("inactive",n!==v));
+  const dayUI=v!=="budget";
+  document.getElementById("strip").hidden=!dayUI;
+  document.getElementById("weekControls").hidden=!dayUI;
+  document.getElementById("copyPrev").hidden=v!=="workout";
+  if(!dayUI) document.getElementById("resetConfirm").hidden=true;
+  progress();
+}
+
+/* ---------- budget ---------- */
+const K=t=>`https://www.keellssuper.com/product?cat=4&s=~${encodeURIComponent(t)}`;
+const S=h=>`https://spar2u.lk/products/${h}`;
+const ITEMS=[
+ {id:"whey",name:"Whey protein",u:"g",use:o=>o.whey?210:0,est:{price:18000,size:907,label:"Whey 2 lb (908 g) from a supplement shop"}},
+ {id:"creatine",name:"Creatine",u:"g",use:()=>35,est:{price:8000,size:300,label:"Creatine monohydrate 300 g from a supplement shop"}},
+ {id:"milk",name:"Full-cream milk",u:"ml",use:o=>(o.whey?1750:0)+(o.bed?1750:0),
+   keells:{price:495,size:1000,label:"Richlife Full Cream UHT 1L (10% off)",url:K("FRESH MILK")},
+   spar:{price:500,size:1000,label:"Chello Fresh Milk 1L",url:S("chello-fresh-milk-1000ml")}},
+ {id:"banana",name:"Bananas (ambul)",u:"g",use:()=>15*125,note:"15 bananas",
+   keells:{price:340,size:1000,label:"Banana - Ambul, per kg",url:K("BANANA")},
+   spar:{price:340,size:1000,label:"Ambul Banana, about 1 kg",url:S("ambul-banana-about-1kg")}},
+ {id:"peanut",name:"Roasted peanuts",u:"g",use:()=>210,
+   keells:{price:360,size:100,label:"Black & Gold Roasted Peanuts 100g",url:K("PEANUT")},
+   spar:{price:315,size:80,label:"Asiri Roasted Peanuts 80g",url:S("asiri-roasted-peanuts-80g")},
+   market:{price:1400,size:1000,label:"Loose peanuts at the market, per kg"}},
+ {id:"soya",name:"Soya meat",u:"g",use:o=>o.whey?100:350,
+   keells:{price:115,size:90,label:"Keells Soya Meat Curry 90g",url:K("SOYA")},
+   spar:{price:130,size:90,label:"Lankasoy Soya Jaffna Curry 90g",url:S("lankasoy-soya-jaffna-curry-90g")}},
+ {id:"chick",name:"Chickpeas (dry)",u:"g",use:()=>120,
+   keells:{price:335,size:1000,label:"Chickpeas (Gram) Bulk, per kg",url:K("CHICKPEAS")},
+   spar:{price:380,size:1000,label:"Chick Peas Bulk, 1 kg",url:S("chick-peas-bulk-per-kg")}},
+ {id:"gram",name:"Green gram (dry)",u:"g",use:()=>140,
+   keells:{price:820,size:1000,label:"Green Gram Bulk, per kg",url:K("GREEN GRAM")},
+   spar:{price:850,size:1000,label:"Green Gram Bulk, per kg",url:S("green-gram-bulk-per-kg")}},
+ {id:"fish",name:"Canned mackerel",u:"can",use:()=>0.5,
+   keells:{price:480,size:1,label:"Ocean Star Mackerel 425g",url:K("MACKEREL")},
+   spar:{price:540,size:1,label:"SPAR Local Jack Mackerel 425g",url:S("spar-local-jack-mackerel-canned-fish-425g")}},
+ {id:"bread",name:"Bread",u:"loaf",use:()=>0.2,note:"2 slices",
+   keells:{price:459,size:1,label:"Prima Sunrise White Bread 500g (10% off)",url:K("WHITE BREAD")},
+   spar:{price:159,size:1,label:"Top Crust Bread 450g",url:S("top-crust-bread-450g")}},
+ {id:"coconut",name:"Coconut (for grating)",u:"nut",use:()=>1,
+   keells:null,
+   spar:{price:169,size:1,label:"Coconuts, each",url:S("coconuts-each")}},
+ {id:"papaya",name:"Papaya (run-day fruit)",u:"g",use:()=>500,
+   keells:{price:180,size:1000,label:"Papaya, per kg",url:K("PAPAYA")},
+   spar:{price:228,size:1200,label:"Papaya, each (about 1.2 kg)",url:S("papaya-each-about-1-2kg")}},
+ {id:"powder",name:"Full-cream milk powder",u:"g",use:o=>o.whey?0:210,
+   keells:{price:1200,size:400,label:"Highland Full Cream Milk Powder 400g",url:K("HIGHLAND")},
+   spar:{price:1150,size:400,label:"Pure Dale Full Cream Milk Powder 400g",url:S("pure-dale-full-cream-milk-powder-400g")}},
+ {id:"oats",name:"Oats",u:"g",use:o=>(o.whey?(o.oats?280:0):280),
+   keells:{price:1400,size:1000,label:"Oateo Instant Oats 1kg",url:K("OATS")},
+   spar:{price:1400,size:1000,label:"Oateo Instant Oats Pouch 1kg",url:S("oateo-instant-oats-pouch-1kg")}},
+ {id:"egg",name:"Eggs",u:"egg",use:o=>o.egg?7:0,
+   keells:{price:52,size:1,label:"Eggs Bulk Large, each",url:K("EGG")},
+   spar:{price:585,size:10,label:"SPAR Local Eggs Medium, 10 pack",url:S("spar-local-eggs-medium-10-pack")}}
+];
+const WEEKS_PER_MONTH=4.33;
+const rs=n=>"Rs "+Math.round(n).toLocaleString("en-US");
+function pick(it,o){
+  if(it.est) return {src:"est",...it.est};
+  if(it.id==="peanut"&&o.market) return {src:"market",...it.market};
+  const k=it.keells, s=it.spar;
+  if(o.store==="keells") return k?{src:"keells",...k}:{src:"spar",...s,fallback:true};
+  if(o.store==="spar") return s?{src:"spar",...s}:{src:"keells",...k,fallback:true};
+  if(!k) return {src:"spar",...s}; if(!s) return {src:"keells",...k};
+  return (k.price/k.size<=s.price/s.size)?{src:"keells",...k}:{src:"spar",...s};
+}
+function fmtUse(it,q){
+  if(it.note&&q) return it.note;
+  if(it.u==="g") return q>=1000?(q/1000).toFixed(2).replace(/\.?0+$/,"")+" kg":q+" g";
+  if(it.u==="ml") return (q/1000).toFixed(2).replace(/\.?0+$/,"")+" L";
+  return (q%1?q.toFixed(1):q)+" "+it.u+(q===1||q<1?"":"s");
+}
+function renderBudget(){
+  const o=store.budget;
+  document.querySelectorAll("#storeSeg button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.store===o.store));
+  document.getElementById("optWhey").checked=o.whey;
+  document.getElementById("optOats").checked=o.oats;
+  document.getElementById("optOats").disabled=!o.whey;
+  document.getElementById("optBed").checked=o.bed;
+  document.getElementById("optEgg").checked=o.egg;
+  document.getElementById("optMarket").checked=o.market;
+  let week=0; const rows=[];
+  ITEMS.forEach(it=>{
+    const q=it.use(o); const pr=pick(it,o);
+    const key=`${pr.src}.${it.id}`;
+    const custom=o.prices[key];
+    const price=custom!=null?custom:pr.price;
+    const cost=q?price/pr.size*q:0; week+=cost;
+    const srcName={keells:"Keells",spar:"SPAR",est:"Estimate",market:"Market"}[pr.src];
+    const flag=(pr.src==="est"||pr.src==="market")?'<span class="flag">EST</span>':"";
+    const fb=pr.fallback?' <span class="flag">not listed at this store</span>':"";
+    const prod=pr.url?`<a href="${pr.url}" target="_blank" rel="noopener">${esc(pr.label)}</a>`:esc(pr.label);
+    rows.push(`<tr class="${q?"":"off"}"><td>${esc(it.name)}${flag}</td><td>${prod}<span class="src">${srcName}${fb}</span></td>
+      <td class="num"><input type="number" min="0" step="1" inputmode="decimal" id="price-${key}" data-price="${key}" value="${price}" class="${custom!=null?"edited":""}" aria-label="${esc(it.name)} pack price"></td>
+      <td class="num">${q?fmtUse(it,q):"–"}</td><td class="num">${q?rs(cost):"–"}</td><td class="num">${q?rs(cost*WEEKS_PER_MONTH):"–"}</td></tr>`);
+  });
+  document.getElementById("bBody").innerHTML=rows.join("");
+  document.getElementById("bWeek").textContent=rs(week);
+  document.getElementById("bMonth").textContent=rs(week*WEEKS_PER_MONTH);
+  document.getElementById("bDay").textContent=rs(week/7);
+  document.getElementById("fWeek").textContent=rs(week);
+  document.getElementById("fMonth").textContent=rs(week*WEEKS_PER_MONTH);
+}
+
+/* ---------- hi devike ---------- */
+const TODAY=["sun","mon","tue","wed","thu","fri","sat"][new Date().getDay()];
+const TIPS={
+  train:["Pull-ups and lateral raises first. They build the V.","Leave 1–2 reps in the tank on every set.","Beat last week's weight by a little. That's the whole game."],
+  run:["Easy pace today. You should be able to chat.","Grab a thambili after the run.","Two bananas before you head out."],
+  rest:["Rest day. Eat every snack. Muscle grows today.","Sleep 8 hours tonight. Free gains.","Step on the scale this morning and log it."]
+};
+function dayDone(scope,key){
+  const card=document.querySelector(`.day[data-prog-scope="${scope}"][data-day="${key}"]`);
+  if(!card) return [0,0];
+  const b=[...card.querySelectorAll('.set input[type=checkbox], .opt input[type=checkbox]')];
+  return [b.filter(x=>x.checked).length,b.length];
+}
+function renderHello(){
+  const D=DAYS.find(d=>d.key===TODAY);
+  const h=new Date().getHours();
+  document.getElementById("greet").textContent=(h<12?"Good morning":h<17?"Good afternoon":"Good evening")+" · "+new Date().toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"short"});
+  const f=foodFor(D), k=f.reduce((a,i)=>a+i.k,0), p=f.reduce((a,i)=>a+i.p,0);
+  const what=D.ex?`${D.title} · ${D.ex.length+(D.pull?1:0)} exercises${D.abs?" + abs":""}`:D.cardio?(D.choose?"Long easy run or cycle"+(D.abs?" + abs":""):D.cardio[0].name):"Rest and recover";
+  document.getElementById("glance").innerHTML=
+    `<div><span>Train</span><b>${esc(what)}</b></div>`+
+    `<div><span>Morning</span><b>${esc(SAVORY[ROT[D.key]].what)}</b></div>`+
+    `<div><span>Snacks</span><b>≈ ${k.toLocaleString("en-US")} kcal · ${p} g protein</b></div>`;
+  const [wd,wt]=dayDone("w",TODAY), [fd,ft]=dayDone("f",TODAY);
+  const m=document.getElementById("mascot"), mouth=document.getElementById("mouth");
+  let msg, mood=D.kind==="rest"?"rest":"";
+  if(D.kind!=="rest"&&wt&&wd===wt&&ft&&fd===ft){msg="Workout and snacks both done. Legend.";mood="party"}
+  else if(D.kind!=="rest"&&wt&&wd===wt){msg="Workout done! Now get that shake in.";mood="party"}
+  else if(ft&&fd===ft){msg="All snacks eaten. Nice work.";mood="party"}
+  else {const list=TIPS[D.kind];msg=list[(new Date().getDate())%list.length]}
+  document.getElementById("bubble").textContent=msg;
+  m.setAttribute("class","mascot"+(mood?" "+mood:""));
+  mouth.setAttribute("d",mood==="party"?"M42 60 Q50 72 58 60 Z":"M43 61 Q50 68 57 61");
+  mouth.setAttribute("fill",mood==="party"?"#15212b":"none");
+  document.getElementById("openToday").textContent=D.kind==="rest"?"Open today's snacks":"Open today's workout";
+}
+document.getElementById("openToday").addEventListener("click",()=>{
+  const D=DAYS.find(d=>d.key===TODAY);
+  setView(D.kind==="rest"?"food":"workout"); show(TODAY);
+  document.getElementById("strip").scrollIntoView({behavior:"smooth",block:"start"});
+});
+
+/* ---------- events ---------- */
+function onChange(e){
+  const el=e.target;
+  if(el.dataset.k) set(el.dataset.k, el.type==="checkbox"?el.checked:el.value.trim());
+  if(el.dataset.radio) set(el.dataset.radio, el.value);
+  progress();
+}
+document.getElementById("days").addEventListener("change",onChange);
+document.getElementById("fdays").addEventListener("change",onChange);
+document.getElementById("days").addEventListener("click",e=>{
+  const b=e.target.closest("[data-phase]"); if(!b) return;
+  store.phase=+b.dataset.phase; save();
+  renderWorkout(); fill(); show(store.day);
+});
+document.querySelector(".tabs").addEventListener("click",e=>{const b=e.target.closest("button");if(b)setView(b.dataset.view)});
+
+const weekSel=document.getElementById("week");
+weekSel.innerHTML=Array.from({length:16},(_,i)=>`<option value="${i+1}">Week ${i+1}${(i+1)%7===0?" (deload)":""}</option>`).join("");
+weekSel.value=store.week;
+weekSel.addEventListener("change",()=>{store.week=+weekSel.value;save();fill()});
+document.getElementById("copyPrev").addEventListener("click",()=>{
+  const prev=store.w[String(store.week-1)]; if(!prev) return;
+  const cur=wk();
+  Object.entries(prev).forEach(([k,v])=>{if(k.endsWith(".w")&&!cur[k]) cur[k]=v});
+  save(); fill();
+});
+const rc=document.getElementById("resetConfirm");
+document.getElementById("resetWeek").addEventListener("click",()=>{rc.hidden=false});
+document.getElementById("resetNo").addEventListener("click",()=>{rc.hidden=true});
+document.getElementById("resetYes").addEventListener("click",()=>{store.w[String(store.week)]={};save();fill();rc.hidden=true});
+
+document.getElementById("storeSeg").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;store.budget.store=b.dataset.store;save();renderBudget()});
+[["optWhey","whey"],["optOats","oats"],["optBed","bed"],["optEgg","egg"],["optMarket","market"]].forEach(([id,k])=>{
+  document.getElementById(id).addEventListener("change",e=>{store.budget[k]=e.target.checked;save();renderBudget()});
+});
+document.getElementById("bBody").addEventListener("change",e=>{
+  const el=e.target; if(!el.dataset.price) return;
+  const v=parseFloat(el.value);
+  if(isNaN(v)||v<0) delete store.budget.prices[el.dataset.price]; else store.budget.prices[el.dataset.price]=v;
+  save(); renderBudget();
+});
+document.getElementById("resetPrices").addEventListener("click",()=>{store.budget.prices={};save();renderBudget()});
+
+/* ---------- boot ---------- */
+renderWorkout(); renderFood(); fill(); strip(); renderBudget();
+const hash=location.hash.replace("#","");
+setView(["workout","food","budget"].includes(hash)?hash:store.view);
+</script>
+</body>
+</html>
